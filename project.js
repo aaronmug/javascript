@@ -1,3 +1,11 @@
+// 1. Deposit some money
+// 2. Determine number of lines to bet on
+// 3. Collect a bet amount
+// 4. Spin the slot machine
+// 5. Check if the user won
+// 6. Give the user their winnings
+// 7. Play again
+
 const prompt = require("prompt-sync")();
 
 const ROWS = 3;
@@ -103,9 +111,29 @@ const printRows = (rows) => {
   }
 };
 
+const getWinnings = (rows, bet, lines) => {
+  let winnings = 0;
+  for (let row = 0; row < lines; row++) {
+    const symbols = rows[row];
+    let allSame = true;
+    for (const symbol of symbols) {
+      if (symbol != symbols[0]) {
+        allSame = false;
+        break;
+      }
+    }
+    if (allSame) {
+      winnings += bet * SYMBOL_VALUES[symbols[0]];
+    }
+  }
+  return winnings;
+};
+
 let balance = deposit();
 const numberOfLines = getNumberOfLines();
 const bet = getBet(balance, numberOfLines);
 const reels = spin();
 const rows = transpose(reels);
 printRows(rows);
+const winnings = getWinnings(rows, bet, numberOfLines);
+console.log("You won, $" + winnings.toString());
